@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require('config')
+const gravatar = require('gravatar')
 const User = require('./../../models/User')
 const { validationResult } = require('express-validator')
 
@@ -11,7 +12,6 @@ module.exports.auth = async (req, res) =>{
         res.json(user)
     }catch(err){
         console.error(err.message)
-        res.status(500).send('server eroor')
     }
 }
 
@@ -25,12 +25,12 @@ module.exports.login = async (req, res) =>{
     try{
         let user = await User.findOne({email})
         if(!user){
-            return res.status(400).json([{msg:'Данный пользователь не найден'}])
+            return res.status(400).json({msg:'Данный пользователь не найден'})
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
         if(!isMatch){
-            return res.status(400).json([{msg:'Данный пользователь не найден'}])
+            return res.status(400).json({msg:'Данный пользователь не найден'})
         }
 
         const payload ={
@@ -38,7 +38,7 @@ module.exports.login = async (req, res) =>{
                 id: user.id
             }
         }
-
+        console.log(payload)
         jwt.sign(payload, config.get('jwtToken'), {expiresIn:'1h'}, (err, token)=>{
             if(err) throw err
             res.json({token})
@@ -62,7 +62,7 @@ module.exports.register = async (req, res) =>{
     try{
         let user = await User.findOne({email})
         if(user){
-            return res.status(400).json([{msg:'Данный пользователь уже сущесвует'}])
+            return res.status(400).json({msg:'Данный пользователь уже сущесвует'})
         }
 
         const avatar = gravatar.url(email,{

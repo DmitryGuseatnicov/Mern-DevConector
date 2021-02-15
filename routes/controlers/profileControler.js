@@ -18,7 +18,7 @@ module.exports.getMe = async (req, res)=>{
 }
 //Создать или Изменить Профиль
 module.exports.createOrUpdate = async (req, res)=>{
-
+    console.log(req.body)
     const errors = validationResult(req)
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -93,10 +93,11 @@ module.exports.getProfileById = async (req, res) =>{
 }
 //Удалить User
 module.exports.removeUser = async (req, res) =>{
+    console.log(req.user)
     try {
         await Post.deleteMany({user: req.user.id})
         await Profile.findOneAndRemove({user: req.user.id})
-        await User.findOneAndRemove({_id:req.user.id})
+        await User.findOneAndRemove({_id :req.user.id})
         res.json({msg:'Пользовател был удален'})
     } catch (err) {
         console.error(err.message)

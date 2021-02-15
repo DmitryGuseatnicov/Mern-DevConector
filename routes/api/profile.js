@@ -34,7 +34,7 @@ router.get('/user/:user_id', getProfileById)
 
 //path          api/profile
 //видимость     Приватная
-//описание      Получить профиль по ID
+//описание      Удалить профиль по ID
 router.delete('/', authMiddleware , removeUser)
 
  

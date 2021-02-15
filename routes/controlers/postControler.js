@@ -110,14 +110,15 @@ module.exports.unLikePost = async(req, res) =>{
 }
 
 module.exports.createComment = async (req, res) =>{
+    console.log(req.body)
     const errors = validationResult(req)
     if(!errors.isEmpty()){
        return res.status(400).json({errors: errors.array()})
     }
     try {
-        const user = await User.findById(req.user.is).select("-password")
-        const post = await Post.findById(req.params.id)
-
+        const user = await User.findById(req.user.id).select("-password")
+        const post = await Post.findById(req.params.postId)
+        console.log(post)
         const newComment = {
         text: req.body.text,
         name: user.name,
@@ -125,7 +126,7 @@ module.exports.createComment = async (req, res) =>{
         user: req.user.id
     }
     post.comments.unshift(newComment)
-
+    console.log(post)
     await post.save()
     res.json(post.comments)
 

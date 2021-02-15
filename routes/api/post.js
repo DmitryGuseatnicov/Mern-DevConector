@@ -43,7 +43,7 @@ router.put('/unlike/:id', authMiddleware, unLikePost)
 //path          //api/posts/comment/:id 
 //видимость     Приватная 
 //описание      Создать Комментарий
-router.post('/comment',[authMiddleware,
+router.post('/comment/:postId',[authMiddleware,
     [
         check('text', 'Пост должен содержать больше одного символа')
     ]
